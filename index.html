@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王乃勋 | 个人主页</title>
+    <style>
+        /* ========== CSS 变量（深色主题 = 默认） ========== */
+        :root {
+            --bg-color: #0a0e17;
+            --bg-secondary: rgba(255,255,255,0.03);
+            --text-primary: #e0e6f0;
+            --text-secondary: #8892a4;
+            --text-muted: #a0aab8;
+            --border-color: rgba(255,255,255,0.06);
+            --border-hover: rgba(0,212,255,0.3);
+            --card-bg: rgba(255,255,255,0.02);
+            --nav-bg: rgba(10,14,23,0.6);
+            --accent: #00d4ff;
+            --accent-gradient: linear-gradient(135deg, #00d4ff, #7b61ff);
+            --hero-title-gradient: linear-gradient(135deg, #ffffff 0%, #7b61ff 60%, #00d4ff 100%);
+            --particle-color: rgba(0,212,255,0.35);
+            --line-color: rgba(0,212,255,0.12);
+            --qr-bg: #ffffff;
+            --qr-fg: #0a0e17;
+            --footer-border: rgba(255,255,255,0.04);
+            --stat-num-gradient: linear-gradient(135deg, #00d4ff, #7b61ff);
+        }
+
+        /* ========== 浅色主题 ========== */
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --bg-secondary: rgba(0,0,0,0.02);
+            --text-primary: #1a2332;
+            --text-secondary: #3d5270;
+            --text-muted: #556a80;
+            --border-color: rgba(0,0,0,0.07);
+            --border-hover: rgba(0,212,255,0.5);
+            --card-bg: #f5f7fa;
+            --nav-bg: rgba(255,255,255,0.88);
+            --accent: #0099cc;
+            --accent-gradient: linear-gradient(135deg, #0099cc, #6b4ce6);
+            --hero-title-gradient: linear-gradient(135deg, #1a2332 0%, #6b4ce6 60%, #0099cc 100%);
+            --particle-color: rgba(0,153,204,0.2);
+            --line-color: rgba(0,153,204,0.08);
+            --qr-bg: #ffffff;
+            --qr-fg: #1a2332;
+            --footer-border: rgba(0,0,0,0.05);
+            --stat-num-gradient: linear-gradient(135deg, #0099cc, #6b4ce6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        /* -------------------- 粒子背景 -------------------- */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            will-change: transform;
+        }
+
+        /* -------------------- WebGL 着色器背景 -------------------- */
+        #shader-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+            will-change: transform;
+        }
+        [data-theme="light"] #shader-canvas {
+            opacity: 0.5;
+        }
+
+        /* -------------------- 导航 -------------------- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(8px);
+            background: var(--nav-bg);
+            transition: background 0.4s ease;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 24px;
+            font-size: 14px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* ------- 下载简历 ------- */
+        .resume-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--accent);
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .resume-btn:hover {
+            background: rgba(0,212,255,0.1);
+            box-shadow: 0 0 20px rgba(0,212,255,0.15);
+        }
+
+        /* ------- 主题切换 ------- */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+/* -------------------- 通用布局 -------------------- */
+        section {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 24px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 48px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title .num {
+            color: var(--accent);
+            font-size: 16px;
+            font-weight: 400;
+            font-family: 'SF Mono', 'Consolas', monospace;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            opacity: 0.4;
+            margin-left: 12px;
+        }
+
+        /* -------------------- Hero -------------------- */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 80px;
+        }
+
+        .hero-inner {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-3d {
+            flex-shrink: 0;
+            width: 200px;
+            height: 200px;
+        }
+        .hero-3d canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .hero-greeting {
+            font-size: 14px;
+            color: var(--accent);
+            font-family: 'SF Mono', 'Consolas', monospace;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+
+        .hero-content h1 {
+            font-size: 52px;
+            font-weight: 800;
+            background: var(--hero-title-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .hero-content .subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .hero-content .one-liner {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .hero-content .highlight {
+            color: var(--accent);
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .hero-tags span {
+            padding: 5px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .hero-tags span:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 20px rgba(0,212,255,0.1);
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 10px 32px;
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .hero-cta:hover {
+            background: rgba(0,212,255,0.1);
+            box-shadow: 0 0 30px rgba(0,212,255,0.15);
+        }
+
+        .hero-cta.primary {
+            background: var(--accent-gradient);
+            color: #fff;
+            border: none;
+        }
+        .hero-cta.primary:hover {
+            box-shadow: 0 0 30px rgba(0,212,255,0.3);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator .line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--text-secondary), transparent);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* -------------------- 关于我 -------------------- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+
+        .about-text .highlight {
+            color: var(--accent);
+        }
+
+        .about-text .tencent-link {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 8px 24px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(123,97,255,0.1));
+            border: 1px solid var(--border-hover);
+            border-radius: 6px;
+            color: var(--accent);
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .about-text .tencent-link:hover {
+            background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(123,97,255,0.2));
+            box-shadow: 0 0 30px rgba(0,212,255,0.1);
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,212,255,0.05);
+        }
+
+        .stat-card .num {
+            font-size: 22px;
+            font-weight: 800;
+            background: var(--stat-num-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* -------------------- 技能 -------------------- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .skill-category:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 4px 24px rgba(0,212,255,0.04);
+        }
+
+        .skill-category h3 {
+            font-size: 14px;
+            color: var(--accent);
+            margin-bottom: 16px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .skill-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .skill-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: background 0.3s;
+        }
+
+        .skill-dots span.filled {
+            background: var(--accent);
+            box-shadow: 0 0 6px rgba(0,212,255,0.4);
+        }
+
+        /* 技能标签（奖项区域用） */
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .badge-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .badge-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+        }
+
+        .badge-card .icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .badge-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .badge-card p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* -------------------- 经历 -------------------- */
+        .timeline {
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            opacity: 0.4;
+        }
+
+        .timeline-item {
+            padding-left: 32px;
+            padding-bottom: 32px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 4px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 2px solid var(--accent);
+            transition: box-shadow 0.3s;
+        }
+
+        .timeline-item:hover::before {
+            box-shadow: 0 0 16px rgba(0,212,255,0.5);
+        }
+
+        .timeline-item .date {
+            font-size: 12px;
+            color: var(--accent);
+            font-family: 'SF Mono', 'Consolas', monospace;
+            margin-bottom: 4px;
+        }
+
+        .timeline-item h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .timeline-item .org {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .timeline-item p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* -------------------- 联系方式 -------------------- */
+        #contact {
+            padding-bottom: 60px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .contact-info p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            padding: 8px 0;
+        }
+
+        .contact-link:hover {
+            color: var(--accent);
+        }
+
+        .contact-link .icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .contact-link:hover .icon {
+            border-color: var(--accent);
+            background: rgba(0,212,255,0.05);
+        }
+
+        .contact-link .info {
+            display: flex;
+            flex-direction: column;
+        }
+        .contact-link .info .sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        .qr-section {
+            text-align: center;
+        }
+
+        .qr-placeholder {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(123,97,255,0.05));
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .qr-placeholder:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 0 40px rgba(0,212,255,0.05);
+        }
+
+        .qr-placeholder canvas {
+            display: block;
+        }
+
+        .qr-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .qr-label span {
+            color: var(--accent);
+        }
+
+        /* -------------------- Footer -------------------- */
+        footer {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 32px 24px;
+            font-size: 13px;
+            color: #4a5568;
+            border-top: 1px solid var(--footer-border);
+            transition: border-color 0.4s ease;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ========== 回到顶部按钮 ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: none;
+            background: var(--accent-gradient);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transform: translateY(10px);
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .back-to-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px rgba(0,212,255,0.25);
+        }
+        .back-to-top:hover .back-to-top-ring .ring-bg {
+            stroke: rgba(255,255,255,0.2);
+        }
+
+        .back-to-top-inner {
+            position: relative;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top svg.arrow-icon {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            position: absolute;
+            z-index: 2;
+        }
+
+        .back-to-top-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .back-to-top-ring .ring-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.15);
+            stroke-width: 3;
+        }
+        .back-to-top-ring .ring-fill {
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 100 100;
+            stroke-dashoffset: 100;
+            transition: stroke-dashoffset 0.2s ease;
+        }
+
+        /* ========== 技能滚动动画 ========== */
+        .skill-category {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .skill-category.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skill-dots span {
+            transition: background 0.5s ease, box-shadow 0.5s ease;
+        }
+        .skill-dots span.filled {
+            background: var(--accent);
+            box-shadow: 0 0 6px rgba(0,212,255,0.4);
+        }
+
+        /* ========== 打印样式（简历 PDF） ========== */
+        @media print {
+            body {
+                background: #fff !important;
+                color: #222 !important;
+                font-size: 12pt;
+                padding: 0;
+                margin: 0;
+            }
+            nav, #shader-canvas, #particles-canvas, .scroll-indicator, .back-to-top,
+            .theme-toggle, .resume-btn, .hero-3d,
+            .hero-cta, .tencent-link, footer,
+            .section-title::after, .contact-grid .qr-section,
+            .skill-dots { display: none !important; }
+
+            #hero { min-height: auto; padding: 40px 0; }
+            section { padding: 24px 0; max-width: 100%; }
+            .hero-content h1 { font-size: 28pt; -webkit-text-fill-color: #1a2332; color: #1a2332; background: none; }
+            .hero-content .subtitle, .hero-content .one-liner { color: #555; }
+
+            .section-title { font-size: 18pt; margin-bottom: 16px; }
+            .section-title .num { color: #0099cc; }
+
+            .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 16px; }
+            .about-text p, .timeline-item p { color: #444; }
+            .stat-card { border: 1px solid #ddd; box-shadow: none; }
+            .stat-card .num { -webkit-text-fill-color: #0099cc; color: #0099cc; background: none; font-size: 20pt; }
+            .timeline::before { border-left: 1px solid #ccc; }
+            .timeline-item h3 { font-size: 14pt; }
+            .timeline-item .org { color: #666; }
+            .skill-category { border: 1px solid #ddd; break-inside: avoid; }
+            .skill-category h3 { color: #0099cc; }
+            .skill-item { color: #444; }
+            .contact-links .contact-link { color: #444; }
+            .contact-link .icon { border-color: #ddd; }
+            .badge-card { border: 1px solid #ddd; }
+            .badge-card p { color: #666; }
+        }
+
+        /* -------------------- 响应式 -------------------- */
+        @media (max-width: 820px) {
+            .hero-inner {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
+            .hero-3d {
+                width: 140px;
+                height: 140px;
+            }
+            .hero-tags, .hero-actions { justify-content: center; }
+
+            nav {
+                padding: 14px 16px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .nav-links a {
+                margin-left: 12px;
+                font-size: 12px;
+            }
+            .nav-right {
+                gap: 8px;
+            }
+            .back-to-top {
+                width: 40px;
+                height: 40px;
+                bottom: 16px;
+                right: 16px;
+            }
+            .back-to-top-inner {
+                width: 40px;
+                height: 40px;
+            }
+            .back-to-top svg.arrow-icon {
+                width: 16px;
+                height: 16px;
+            }
+            .resume-btn {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+            .theme-toggle {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-content h1 { font-size: 28px; }
+            .hero-content .subtitle { font-size: 15px; }
+            .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 24px; }
+            .about-stats { grid-template-columns: 1fr 1fr; }
+            section { padding: 48px 16px; }
+            .section-title { font-size: 20px; margin-bottom: 24px; }
+            .nav-links { display: none; }
+            .hero-3d { width: 100px; height: 100px; }
+            .badge-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== WebGL 着色器背景 ========== -->
+    <canvas id="shader-canvas"></canvas>
+
+    <!-- ========== 粒子背景 ========== -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- ========== 导航 ========== -->
+    <nav>
+        <div class="nav-left">
+            <span class="logo">王乃勋</span>
+            <div class="nav-links">
+                <a href="#about">关于</a>
+                <a href="#skills">技能</a>
+                <a href="#experience">经历</a>
+                <a href="#honors">荣誉</a>
+                <a href="#contact">联系</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <button class="resume-btn" onclick="window.print()">📄 下载简历</button>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 深色</button>
+        </div>
+    </nav>
+
+    <!-- ========== Hero ========== -->
+    <section id="hero">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <div class="hero-greeting">Hi, 欢迎来到我的主页</div>
+                <h1>王乃勋</h1>
+                <p class="subtitle">香港城市大学 · 计算机科学与技术 · 大二</p>
+                <p class="one-liner">
+                    正在努力成为一名优秀的全栈开发工程师，<br>
+                    以<span class="highlight">腾讯日常实习生（全栈开发）</span>为目标，持续学习与成长。
+                </p>
+                <div class="hero-tags">
+                    <span>💻 全栈方向</span>
+                    <span>🐍 Java / Python</span>
+                    <span>☁️ 数据结构及算法设计学习中</span>
+                    <span>📱 ArkTS / HarmonyOS</span>
+                </div>
+                <div class="hero-actions">
+                    <a href="#about" class="hero-cta primary">关于我 →</a>
+                    <a href="https://join.qq.com/" target="_blank" class="hero-cta">腾讯校招 →</a>
+                </div>
+            </div>
+            <div class="hero-3d" id="hero-3d-container"></div>
+        </div>
+        <div class="scroll-indicator">
+            <span>向下滚动</span>
+            <div class="line"></div>
+        </div>
+    </section>
+
+    <!-- ========== 关于我 ========== -->
+    <section id="about">
+        <h2 class="section-title"><span class="num">01.</span>关于我</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>
+                    你好，我是 <span class="highlight">王乃勋</span>，
+                    香港城市大学计算机科学与技术专业大二学生。
+                    目前 GPA 3.5/4.3（专业前 20%），
+                    正在努力成为一名优秀的全栈开发工程师。
+                </p>
+                <p>
+                    我对 <span class="highlight">全栈开发</span> 充满热情，
+                    课余时间喜欢用各种项目来实践所学。
+                    曾在英特尔中国研究院实习，在 Linux 开发板上做嵌入式后端开发；
+                    也参与过发明专利的研发和物理学术竞赛。
+                    我善于学习利用 <span class="highlight">先进AI 工具辅助</span>，
+                    能够高效地解决项目中的难题。
+                </p>
+                <p>
+                    🎯 <strong>当前目标</strong>：希望加入
+                    <span class="highlight">腾讯日常实习生 - 全栈开发</span> 岗位，
+                    在真实的工业场景中向优秀的前辈们学习，
+                    将课堂知识转化为工程实践。
+                    腾讯 <em>"用户为本，科技向善"</em> 的理念让我非常认同，
+                    期待能在这个过程中不断突破自己。
+                </p>
+                <a href="https://join.qq.com/" target="_blank" class="tencent-link">
+                    🚀 腾讯校招 → 了解更多
+                </a>
+            </div>
+            <div class="about-stats">
+                <div class="stat-card">
+                    <div class="num">大二</div>
+                    <div class="label">在读年级</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num">3.5/4.3</div>
+                    <div class="label">GPA · 专业前20%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num">英特尔中国研究院</div>
+                    <div class="label">研究院实习经历</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num">HarmonyOS</div>
+                    <div class="label">高级应用开发者认证</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 技术栈 ========== -->
+    <section id="skills">
+        <h2 class="section-title"><span class="num">02.</span>技术栈（学习中）</h2>
+        <div class="skills-grid">
+            <div class="skill-category">
+                <h3>前端</h3>
+                <div class="skill-item">
+                    <span>HTML / CSS / JavaScript</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span class="filled"></span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span>React （入门）</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span>响应式布局</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span></span><span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3>后端 / 语言</h3>
+                <div class="skill-item">
+                    <span>Java</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span class="filled"></span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span>C++</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span>Python</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span class="filled"></span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span>SQL</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span class="filled"></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3>嵌入式 / 其他（入门）</h3>
+                <div class="skill-item">
+                    <span>嵌入式调试</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span>ArkTS / HarmonyOS</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span>lighttpd 部署</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <span>Docker（入门）</span>
+                    <div class="skill-dots">
+                        <span class="filled"></span><span class="filled"></span>
+                        <span class="filled"></span><span></span><span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 经历 / 项目 ========== -->
+    <section id="experience">
+        <h2 class="section-title"><span class="num">03.</span>经历 &amp; 项目</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="date">2025.05 – 2025.07</div>
+                <h3>英特尔中国研究院 · 软件工程师实习生</h3>
+                <div class="org">后端 / 嵌入式开发</div>
+                <p>
+                    在 Linux 开发板上部署 lighttpd Web 服务器，
+                    实现通过 Web 页面远程配置开发板参数，
+                    打通设备侧服务的直连闭环。
+                    锻炼了嵌入式 Linux 开发和网络协议调试能力。
+                </p>
+            </div>
+            <div class="timeline-item">
+                <div class="date">2025</div>
+                <h3>中国大学生物理学术竞赛（CUPT）</h3>
+                <div class="org">中南赛区三等奖 · 核心成员</div>
+                <p>
+                    负责"维尔茨泵"项目的仿真与建模工作，
+                    通过数值模拟分析流体力学特性，
+                    与团队协作完成理论推导和实验验证，最终获得赛区三等奖。
+                </p>
+            </div>
+            <div class="timeline-item">
+                <div class="date">2024 – 2025</div>
+                <h3>显示驱动芯片配套软件测试 · 发明专利</h3>
+                <div class="org">深圳市彤兴电子有限公司 · 第二发明人</div>
+                <p>
+                    参与显示驱动芯片的配套软件测试工作，
+                    作为第二发明人参与发明专利的研发与申报，
+                    积累了工业级软件测试与硬件协同调试的经验。
+                </p>
+            </div>
+            <div class="timeline-item">
+                <div class="date">2026</div>
+                <h3>个人主页项目 · 独立开发</h3>
+                <div class="org">对搭建agent十分感兴趣并自主学习使用Claude Code AI工具辅助开发</div>
+                <p>
+                    集成 Three.js 3D动态模型可视化、深色/浅色主题切换、
+                    粒子动画背景等技术，
+                    展示全栈方向的学习成果与工程实践能力。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 荣誉与证书 ========== -->
+    <section id="honors">
+        <h2 class="section-title"><span class="num">04.</span>荣誉 &amp; 证书</h2>
+        <div class="badge-grid">
+            <div class="badge-card">
+                <div class="icon">📱</div>
+                <h4>HarmonyOS 应用开发者高级认证</h4>
+                <p>华为 · 2025</p>
+            </div>
+            <div class="badge-card">
+                <div class="icon">🏆</div>
+                <h4>CUPT 中南赛区三等奖</h4>
+                <p>中国大学生物理学术竞赛 · 2025</p>
+            </div>
+            <div class="badge-card">
+                <div class="icon">🏅</div>
+                <h4>国际优才基地奖学金</h4>
+                <p>香港城市大学 · 2025</p>
+            </div>
+            <div class="badge-card">
+                <div class="icon">🏸</div>
+                <h4>广东省羽毛球联赛总决赛男子团体八强
+                    / 两届 “松山虎杯” 篮球赛冠军</h4>
+                <p>羽毛球 · 篮球比赛</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 联系方式 ========== -->
+    <section id="contact">
+        <h2 class="section-title"><span class="num">05.</span>联系方式</h2>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <p>
+                    如果有全栈开发相关的实习机会或交流意向，
+                    欢迎随时联系我！期待能与腾讯的前辈们学习 🙌
+                </p>
+                <div class="contact-links">
+                    <a href="mailto:2967685855@qq.com" class="contact-link">
+                        <span class="icon">✉</span>
+                        <div class="info">
+                            <span>2967685855@qq.com(后四位保密)</span>
+                            <span class="sub">邮箱</span>
+                        </div>
+                    </a>
+                    <span class="contact-link">
+                        <span class="icon">💬</span>
+                        <div class="info">
+                            <span>wnx20060531</span>
+                            <span class="sub">微信</span>
+                        </div>
+                    </span>
+                    <span class="contact-link">
+                        <span class="icon">📱</span>
+                        <div class="info">
+                            <span>18028703255</span>
+                            <span class="sub">手机</span>
+                        </div>
+                    </span>
+                    <a href="https://github.com/" target="_blank" class="contact-link">
+                        <span class="icon">⌘</span>
+                        <div class="info">
+                            <span>github.com/Jackw531</span>
+                            <span class="sub">GitHub</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="qr-section">
+                <div class="qr-placeholder" id="qr-container">
+                    <canvas id="qr-canvas" width="140" height="140"></canvas>
+                </div>
+                <p class="qr-label">
+                    扫码添加微信 · <span>wnx20060531</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 回到顶部按钮 ========== -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="回到顶部">
+        <svg class="arrow-icon" viewBox="0 0 24 24">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+        <svg class="back-to-top-ring" viewBox="0 0 52 52">
+            <circle class="ring-bg" cx="26" cy="26" r="22" />
+            <circle class="ring-fill" id="scrollRingFill" cx="26" cy="26" r="22" />
+        </svg>
+    </button>
+
+    <!-- ========== Footer ========== -->
+    <footer>
+        <p>© 2026 王乃勋 · City University of Hong Kong</p>
+        <p style="margin-top: 4px;">
+            🎯 梦想加入 <a href="https://www.tencent.com" target="_blank">腾讯</a> · 全栈开发实习
+        </p>
+    </footer>
+
+    <!-- ========== WebGL 着色器背景动画 ========== -->
+    <script>
+        (function() {
+            var canvas = document.getElementById('shader-canvas');
+            if (!canvas) return;
+
+            var gl;
+            try { gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch(e) {}
+            if (!gl) { canvas.style.display = 'none'; return; }
+
+            // 顶点着色器：全屏四边形
+            var vsSource = [
+                'attribute vec2 a_position;',
+                'void main() {',
+                '    gl_Position = vec4(a_position, 0.0, 1.0);',
+                '}'
+            ].join('\n');
+
+            // 片元着色器：流动有机渐变
+            var fsSource = [
+                'precision mediump float;',
+                'uniform float uTime;',
+                'uniform vec2 uResolution;',
+                '',
+                'void main() {',
+                '    vec2 uv = gl_FragCoord.xy / uResolution;',
+                '    float t = uTime * 0.25;',
+                '',
+                '    float wave1 = sin(uv.x * 3.0 + uv.y * 2.0 + t) * 0.5 + 0.5;',
+                '    float wave2 = sin(uv.y * 4.0 - uv.x * 1.5 + t * 0.7 + 1.2) * 0.5 + 0.5;',
+                '    float wave3 = sin((uv.x + uv.y) * 5.0 + t * 1.3) * 0.5 + 0.5;',
+                '    float wave4 = sin(uv.x * 6.0 - uv.y * 3.0 + t * 0.5 + 3.7) * 0.5 + 0.5;',
+                '',
+                '    float blend = (wave1 + wave2 + wave3 + wave4) * 0.25;',
+                '',
+                '    vec3 color1 = vec3(0.0, 0.6, 0.8);',
+                '    vec3 color2 = vec3(0.42, 0.3, 0.9);',
+                '    vec3 color3 = vec3(0.85, 0.9, 1.0);',
+                '',
+                '    vec3 finalColor = mix(color1, color2, blend);',
+                '    finalColor = mix(finalColor, color3, wave3 * 0.3);',
+                '',
+                '    gl_FragColor = vec4(finalColor, 1.0);',
+                '}'
+            ].join('\n');
+
+            function compileShader(gl, source, type) {
+                var shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
+            }
+
+            var vs = compileShader(gl, vsSource, gl.VERTEX_SHADER);
+            var fs = compileShader(gl, fsSource, gl.FRAGMENT_SHADER);
+            if (!vs || !fs) { canvas.style.display = 'none'; return; }
+
+            var program = gl.createProgram();
+            gl.attachShader(program, vs);
+            gl.attachShader(program, fs);
+            gl.linkProgram(program);
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                canvas.style.display = 'none';
+                return;
+            }
+            gl.useProgram(program);
+
+            // 全屏四边形（两个三角形）
+            var positions = new Float32Array([
+                -1, -1,  1, -1, -1, 1,
+                -1, 1,   1, -1,  1, 1
+            ]);
+            var buf = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+            gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+            var posLoc = gl.getAttribLocation(program, 'a_position');
+            gl.enableVertexAttribArray(posLoc);
+            gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+            var uTimeLoc = gl.getUniformLocation(program, 'uTime');
+            var uResLoc = gl.getUniformLocation(program, 'uResolution');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+                gl.uniform2f(uResLoc, canvas.width, canvas.height);
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            var startTime = performance.now();
+
+            function render() {
+                var time = (performance.now() - startTime) / 1000;
+                gl.uniform1f(uTimeLoc, time);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                requestAnimationFrame(render);
+            }
+            render();
+        })();
+    </script>
+
+    <!-- ========== 增强粒子动画（鼠标交互 / 渐变 / 连接线） ========== -->
+    <script>
+        (function() {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h;
+            const particles = [];
+            const PARTICLE_COUNT = 130;
+            const CONNECTION_DIST = 120;
+            const MOUSE_REPULSE_RADIUS = 150;
+            const REPULSE_FORCE = 1.2;
+
+            // 鼠标位置（默认在屏幕外避免初始偏移）
+            let mouse = { x: -9999, y: -9999 };
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            // 鼠标追踪
+            document.addEventListener('mousemove', function(e) {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            document.addEventListener('mouseleave', function() {
+                mouse.x = -9999;
+                mouse.y = -9999;
+            });
+
+            // 颜色工具：在 #00d4ff 和 #7b61ff 之间线性插值
+            function lerpColor(t) {
+                const r1 = 0x00, g1 = 0xd4, b1 = 0xff;
+                const r2 = 0x7b, g2 = 0x61, b2 = 0xff;
+                const r = Math.round(r1 + (r2 - r1) * t);
+                const g = Math.round(g1 + (g2 - g1) * t);
+                const b = Math.round(b1 + (b2 - b1) * t);
+                return `rgba(${r},${g},${b},`;
+            }
+            function getParticleColor(alpha) {
+                const t = Math.random();
+                return lerpColor(t) + alpha + ')';
+            }
+
+            // 获取当前主题的粒子透明度基准
+            function getBaseAlpha() {
+                const theme = document.documentElement.getAttribute('data-theme');
+                return theme === 'light' ? 0.2 : 0.35;
+            }
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.vx = (Math.random() - 0.5) * 0.6;
+                    this.vy = (Math.random() - 0.5) * 0.6;
+                    this.r = Math.random() * 2 + 0.5;
+                    this.colorT = Math.random(); // 用于渐变
+                }
+                update() {
+                    // 鼠标斥力
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < MOUSE_REPULSE_RADIUS && dist > 0) {
+                        const force = (MOUSE_REPULSE_RADIUS - dist) / MOUSE_REPULSE_RADIUS * REPULSE_FORCE;
+                        const nx = dx / dist;
+                        const ny = dy / dist;
+                        this.vx += nx * force * 0.08;
+                        this.vy += ny * force * 0.08;
+                    }
+
+                    // 速度衰减
+                    this.vx *= 0.98;
+                    this.vy *= 0.98;
+
+                    // 限制最大速度
+                    const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                    if (speed > 2) {
+                        this.vx = (this.vx / speed) * 2;
+                        this.vy = (this.vy / speed) * 2;
+                    }
+
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // 边界回弹
+                    if (this.x < 0) { this.x = 0; this.vx *= -1; }
+                    if (this.x > w) { this.x = w; this.vx *= -1; }
+                    if (this.y < 0) { this.y = 0; this.vy *= -1; }
+                    if (this.y > h) { this.y = h; this.vy *= -1; }
+                }
+                draw(baseAlpha) {
+                    // 透明度随距离鼠标的距离变化：越近越亮
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const distToMouse = Math.sqrt(dx * dx + dy * dy);
+                    let alphaFactor = 1;
+                    if (distToMouse < MOUSE_REPULSE_RADIUS * 2) {
+                        alphaFactor = 1 + (1 - distToMouse / (MOUSE_REPULSE_RADIUS * 2)) * 0.8;
+                    }
+                    const alpha = Math.min(baseAlpha * alphaFactor, 0.7);
+
+                    const color = lerpColor(this.colorT) + alpha + ')';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+            function drawLines(baseAlpha) {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < CONNECTION_DIST) {
+                            const alpha = (1 - dist / CONNECTION_DIST) * baseAlpha * 0.5;
+                            const color = lerpColor((particles[i].colorT + particles[j].colorT) / 2) + alpha + ')';
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = color;
+                            ctx.lineWidth = 0.5 + (1 - dist / CONNECTION_DIST) * 0.8;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, w, h);
+                const baseAlpha = getBaseAlpha();
+                particles.forEach(p => { p.update(); p.draw(baseAlpha); });
+                drawLines(baseAlpha);
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+    </script>
+
+    <!-- ========== QR 码生成 ========== -->
+    <script>
+        (function() {
+            const canvas = document.getElementById('qr-canvas');
+            const ctx = canvas.getContext('2d');
+            const size = 140;
+            const moduleCount = 21;
+            const moduleSize = size / moduleCount;
+
+            function generateQRMatrix(data) {
+                const matrix = [];
+                for (let r = 0; r < moduleCount; r++) {
+                    matrix[r] = [];
+                    for (let c = 0; c < moduleCount; c++) {
+                        if ((r < 7 && c < 7) ||
+                            (r < 7 && c >= moduleCount - 7) ||
+                            (r >= moduleCount - 7 && c < 7)) {
+                            const isOuter = (r === 0 || r === 6 || c === 0 || c === 6) ||
+                                            (r === 0 || r === 6 || c === moduleCount - 1 || c === moduleCount - 7) ||
+                                            (r === moduleCount - 1 || r === moduleCount - 7 || c === 0 || c === 6);
+                            const isInner = (r >= 2 && r <= 4 && c >= 2 && c <= 4) ||
+                                            (r >= 2 && r <= 4 && c >= moduleCount - 5 && c <= moduleCount - 3) ||
+                                            (r >= moduleCount - 5 && r <= moduleCount - 3 && c >= 2 && c <= 4);
+                            matrix[r][c] = isOuter || isInner ? 1 : 0;
+                            continue;
+                        }
+                        const hash = (data.charCodeAt((r * moduleCount + c) % data.length) || 42) +
+                                     (r * 13 + c * 7);
+                        matrix[r][c] = (hash % 3 === 0) ? 1 : 0;
+                    }
+                }
+                return matrix;
+            }
+
+            const data = 'wnx20060531';
+            const matrix = generateQRMatrix(data);
+
+            function drawQR() {
+                ctx.clearRect(0, 0, size, size);
+                const qrBg = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--qr-bg').trim() || '#ffffff';
+                const qrFg = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--qr-fg').trim() || '#0a0e17';
+                ctx.fillStyle = qrBg;
+                ctx.fillRect(0, 0, size, size);
+                ctx.fillStyle = qrFg;
+                for (let r = 0; r < moduleCount; r++) {
+                    for (let c = 0; c < moduleCount; c++) {
+                        if (matrix[r][c]) {
+                            ctx.fillRect(c * moduleSize, r * moduleSize, moduleSize, moduleSize);
+                        }
+                    }
+                }
+            }
+
+            drawQR();
+            document.addEventListener('themeChanged', drawQR);
+        })();
+    </script>
+
+    <!-- ========== Three.js 3D 科技核心 ========== -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+
+        const container = document.getElementById('hero-3d-container');
+        const w = container.clientWidth || 200;
+        const h = container.clientHeight || 200;
+
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
+        camera.position.set(2.8, 1.5, 4.5);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // ---- 灯光 ----
+        const ambient = new THREE.AmbientLight(0x334466);
+        scene.add(ambient);
+
+        const dirLight = new THREE.DirectionalLight(0x00ddff, 1.5);
+        dirLight.position.set(3, 5, 4);
+        scene.add(dirLight);
+
+        const dirLight2 = new THREE.DirectionalLight(0x7b61ff, 0.8);
+        dirLight2.position.set(-4, 1, -3);
+        scene.add(dirLight2);
+
+        // ---- 核心：细分二十面体（科技晶核） ----
+        const coreGeo = new THREE.IcosahedronGeometry(0.85, 1);
+        const coreMat = new THREE.MeshPhysicalMaterial({
+            color: 0x00aaff,
+            metalness: 0.6,
+            roughness: 0.15,
+            transparent: true,
+            opacity: 0.3,
+            emissive: 0x0066aa,
+            emissiveIntensity: 0.4,
+            clearcoat: 0.4,
+            envMapIntensity: 0.5,
+        });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(core);
+
+        // ---- 核心发光内层 ----
+        const glowGeo = new THREE.IcosahedronGeometry(0.7, 0);
+        const glowMat = new THREE.MeshBasicMaterial({
+            color: 0x00ddff,
+            transparent: true,
+            opacity: 0.08,
+        });
+        const glowCore = new THREE.Mesh(glowGeo, glowMat);
+        scene.add(glowCore);
+
+        // ---- 核心外线框 ----
+        const wireGeo = new THREE.IcosahedronGeometry(0.88, 1);
+        const wireMat = new THREE.MeshBasicMaterial({
+            color: 0x7b61ff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.5,
+        });
+        const wireCore = new THREE.Mesh(wireGeo, wireMat);
+        scene.add(wireCore);
+
+        // ---- 外层大线框球体（细密） ----
+        const outerGeo = new THREE.IcosahedronGeometry(1.35, 0);
+        const outerMat = new THREE.MeshBasicMaterial({
+            color: 0x00d4ff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.1,
+        });
+        const outerSphere = new THREE.Mesh(outerGeo, outerMat);
+        scene.add(outerSphere);
+
+        // ---- 光环 1（水平主环） ----
+        const ring1Geo = new THREE.TorusGeometry(1.15, 0.025, 32, 64);
+        const ring1Mat = new THREE.MeshBasicMaterial({
+            color: 0x00d4ff,
+            transparent: true,
+            opacity: 0.7,
+        });
+        const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
+        ring1.rotation.x = Math.PI / 2.5;
+        scene.add(ring1);
+
+        // ---- 光环 2（倾斜副环） ----
+        const ring2Geo = new THREE.TorusGeometry(1.3, 0.015, 24, 64);
+        const ring2Mat = new THREE.MeshBasicMaterial({
+            color: 0x7b61ff,
+            transparent: true,
+            opacity: 0.5,
+        });
+        const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+        ring2.rotation.x = Math.PI / 1.8;
+        ring2.rotation.z = Math.PI / 3;
+        scene.add(ring2);
+
+        // ---- 光环 3（小倾斜环） ----
+        const ring3Geo = new THREE.TorusGeometry(1.05, 0.01, 16, 48);
+        const ring3Mat = new THREE.MeshBasicMaterial({
+            color: 0xff66ff,
+            transparent: true,
+            opacity: 0.25,
+        });
+        const ring3 = new THREE.Mesh(ring3Geo, ring3Mat);
+        ring3.rotation.x = Math.PI / 4;
+        ring3.rotation.z = -Math.PI / 5;
+        scene.add(ring3);
+
+        // ---- 环绕粒子群 ----
+        const orbCount = 600;
+        const orbGeo = new THREE.BufferGeometry();
+        const orbPos = new Float32Array(orbCount * 3);
+        for (let i = 0; i < orbCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            const r = 1.5 + Math.random() * 1.0;
+            orbPos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+            orbPos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+            orbPos[i*3+2] = r * Math.cos(phi);
+        }
+        orbGeo.setAttribute('position', new THREE.BufferAttribute(orbPos, 3));
+
+        const orbMat = new THREE.PointsMaterial({
+            color: 0x88ddff,
+            size: 0.025,
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true,
+        });
+        const orbs = new THREE.Points(orbGeo, orbMat);
+        scene.add(orbs);
+
+        // ---- 第二层粒子（紫色调，分布更广） ----
+        const dustCount = 300;
+        const dustGeo = new THREE.BufferGeometry();
+        const dustPos = new Float32Array(dustCount * 3);
+        for (let i = 0; i < dustCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            const r = 2.0 + Math.random() * 1.5;
+            dustPos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+            dustPos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+            dustPos[i*3+2] = r * Math.cos(phi);
+        }
+        dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+        const dustMat = new THREE.PointsMaterial({
+            color: 0xbb88ff,
+            size: 0.015,
+            transparent: true,
+            opacity: 0.25,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true,
+        });
+        const dust = new THREE.Points(dustGeo, dustMat);
+        scene.add(dust);
+
+        // ---- 背景星空 ----
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 200;
+        const starPos = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount * 3; i++) {
+            starPos[i] = (Math.random() - 0.5) * 12;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.018,
+            transparent: true,
+            opacity: 0.3,
+            blending: THREE.AdditiveBlending,
+        });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        // ---- 动画循环 ----
+        let animTime = 0;
+
+        function animate3d() {
+            requestAnimationFrame(animate3d);
+            animTime += 0.008;
+
+            core.rotation.x += 0.004;
+            core.rotation.y += 0.012;
+            wireCore.rotation.x += 0.004;
+            wireCore.rotation.y += 0.012;
+            glowCore.rotation.x += 0.002;
+            glowCore.rotation.y += 0.008;
+
+            outerSphere.rotation.x += 0.001;
+            outerSphere.rotation.y -= 0.003;
+
+            ring1.rotation.y += 0.01;
+            ring1.rotation.z += 0.003;
+            ring2.rotation.y += 0.008;
+            ring2.rotation.x += 0.004;
+            ring3.rotation.y += 0.015;
+            ring3.rotation.x -= 0.005;
+
+            orbs.rotation.x += 0.001;
+            orbs.rotation.y += 0.002;
+            dust.rotation.x -= 0.0008;
+            dust.rotation.y += 0.0015;
+            stars.rotation.y += 0.0002;
+
+            // 核心脉冲发光
+            const pulse = Math.sin(animTime * 2) * 0.5 + 0.5;
+            coreMat.opacity = 0.2 + pulse * 0.2;
+            coreMat.emissiveIntensity = 0.3 + pulse * 0.4;
+            glowMat.opacity = 0.04 + pulse * 0.08;
+
+            ring1Mat.opacity = 0.5 + Math.sin(animTime * 1.5) * 0.2;
+            ring2Mat.opacity = 0.35 + Math.sin(animTime * 2.3 + 1) * 0.15;
+
+            renderer.render(scene, camera);
+        }
+        animate3d();
+
+        // ---- 自适应 ----
+        function resize3d() {
+            const cw = container.clientWidth || 200;
+            const ch = container.clientHeight || 200;
+            camera.aspect = cw / ch;
+            camera.updateProjectionMatrix();
+            renderer.setSize(cw, ch);
+        }
+        window.addEventListener('resize', resize3d);
+    </script>
+
+    <!-- ========== 主题切换 ========== -->
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeToggle');
+            const isLight = html.getAttribute('data-theme') === 'light';
+            if (isLight) {
+                html.removeAttribute('data-theme');
+                btn.textContent = '🌙 深色';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                btn.textContent = '☀️ 浅色';
+                localStorage.setItem('theme', 'light');
+            }
+            document.dispatchEvent(new Event('themeChanged'));
+        }
+
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.getElementById('themeToggle').textContent = '☀️ 浅色';
+            }
+        })();
+    </script>
+
+    <!-- ========== 回到顶部 + 技能滚动动画 ========== -->
+    <script>
+        // ----- 回到顶部 -----
+        var backBtn = document.getElementById('backToTop');
+        var ringFill = document.getElementById('scrollRingFill');
+
+        function updateBackToTop() {
+            var scrollY = window.scrollY || window.pageYOffset;
+            var docHeight = Math.max(
+                document.body.scrollHeight,
+                document.body.offsetHeight,
+                document.documentElement.clientHeight,
+                document.documentElement.scrollHeight,
+                document.documentElement.offsetHeight
+            );
+            var winHeight = window.innerHeight;
+            var maxScroll = docHeight - winHeight;
+            var percent = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
+
+            // 显隐
+            if (scrollY > 500) {
+                backBtn.classList.add('visible');
+            } else {
+                backBtn.classList.remove('visible');
+            }
+
+            // 圆环进度
+            var offset = 100 - percent * 100;
+            ringFill.style.strokeDashoffset = offset;
+        }
+
+        window.addEventListener('scroll', updateBackToTop);
+        window.addEventListener('resize', updateBackToTop);
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ----- 技能滚动动画 (IntersectionObserver) -----
+        (function() {
+            var skillCategories = document.querySelectorAll('.skill-category');
+            var allDotSpans = document.querySelectorAll('.skill-dots span');
+
+            // 记录哪些点原本是 filled 状态
+            var shouldFill = [];
+            allDotSpans.forEach(function(span, idx) {
+                shouldFill[idx] = span.classList.contains('filled');
+            });
+
+            // 移除所有 .filled 让技能点初始为空
+            allDotSpans.forEach(function(span) {
+                span.classList.remove('filled');
+            });
+
+            // 降级检测
+            if ('IntersectionObserver' in window) {
+                // 卡片淡入动画
+                var cardObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            cardObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.15 });
+
+                skillCategories.forEach(function(card) {
+                    cardObserver.observe(card);
+                });
+
+                // 技能点依次填充（整个 skills section 进入视口才触发）
+                var skillsSection = document.getElementById('skills');
+                var dotsFired = false;
+
+                var dotsObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting && !dotsFired) {
+                            dotsFired = true;
+                            fillDotsSequentially();
+                            dotsObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.2 });
+
+                dotsObserver.observe(skillsSection);
+
+                function fillDotsSequentially() {
+                    var spans = document.querySelectorAll('.skill-dots span');
+                    spans.forEach(function(span, index) {
+                        setTimeout(function() {
+                            if (shouldFill[index]) {
+                                span.classList.add('filled');
+                            }
+                        }, index * 40);
+                    });
+                }
+            } else {
+                // 降级：恢复原始状态
+                allDotSpans.forEach(function(span, index) {
+                    if (shouldFill[index]) {
+                        span.classList.add('filled');
+                    }
+                });
+                skillCategories.forEach(function(card) {
+                    card.classList.add('visible');
+                });
+            }
+        })();
+    </script>
+</html>
